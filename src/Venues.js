@@ -1,7 +1,6 @@
 import React from 'react';
-import InsertNew
- from './InsertNew';
-const Venues = ({venues, venueSelected, neighborhoods, types, typeSelected}) => {
+import InsertNew from './InsertNew';
+const Venues = ({venues, venueSelected, neighborhoods, types, typeSelected, handleSubmit, handleChange, venue}) => {
     return (
     <>
         <div id='venues-container'>
@@ -31,7 +30,7 @@ const Venues = ({venues, venueSelected, neighborhoods, types, typeSelected}) => 
         </div>
         <div id='insert-new'>
         {
-        <InsertNew neighborhoods={neighborhoods} types={types}/>
+        <InsertNew venue={venue} handleChange={handleChange} handleSubmit={handleSubmit}/>
         }
         </div>
     </>

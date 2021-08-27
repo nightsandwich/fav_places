@@ -2,15 +2,18 @@
 
 const express = require('express');
 const { static } = express;
+const volleyball = require('volleyball');
 const path = require('path');
 
 const app = express();
+
+app.use(volleyball);
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 app.use('/dist', static(path.join(__dirname, '..', 'dist')));
-app.use(express.static(path.join(__dirname, '..', '/public')))
+app.use(express.static(path.join(__dirname, '..', 'public')))
 
 //start of the routes - request comes in from the top and hits each of the above lines
 //

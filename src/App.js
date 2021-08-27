@@ -20,6 +20,13 @@ class App extends Component{
       types: [],
       selectedType: {},
       view: null,
+      venue: {
+        name: '',
+        imageUrl: '',
+        website: '',
+        neighborhoodId: '',
+        typeId: ''
+      }
     };
 
     this.venueSelected = this.venueSelected.bind(this);
@@ -27,6 +34,7 @@ class App extends Component{
     this.deleteNote = this.deleteNote.bind(this);
     this.typeSelected = this.typeSelected.bind(this);
     this.addNote = this.addNote.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   async componentDidMount(){
@@ -105,17 +113,41 @@ class App extends Component{
       console.log(ex)
     }
   }
-  async handleSubmit (venue) { //variables???
-    try{
-      await axios.post('/api/venues', venue);
-      this.setState(this.state.venues.push(venue));
-    } catch(ex){
+  
+  handleChange(event) {
+    const value = event.target;
+    const name = value.name;
+    
+    this.setState({
+      venue: {...this.state.venue, [name]: value }
+    });
+  }
+  
+  async handleSubmit(event) {
+    event.preventDefault();
+    try {
+      const res = await axios.post('/api/venues',this.state.venue);
+      const venues = [res.data, ...this.state.venues];
+      this.setState({
+        venues: venues,
+        venue: {
+          name: '',
+          website: '',
+          imageUrl: '',
+          neighborhoodId: '',
+          typeId: ''
+        }
+      });
+    } catch (ex){
+
       console.log(ex);
     }
   }
+
+  
   render(){
-    const { venues, selectedVenue, neighborhoods, selectedNeighborhood, types, selectedType, view } = this.state;
-    const {venueSelected, neighborhoodSelected, typeSelected, deleteNote } = this;
+    const { venues, selectedVenue, neighborhoods, selectedNeighborhood, types, selectedType, view, venue } = this.state;
+    const {venueSelected, neighborhoodSelected, typeSelected, deleteNote, handleChange, handleSubmit } = this;
     return (
       <div id='main-container'>
         <div id='header'>
@@ -131,6 +163,7 @@ class App extends Component{
           <>
             {
               view === 'venues' ? <VenueView 
+                                  venue={venue}
                                   selectedVenue={selectedVenue} 
                                   deleteNote={deleteNote} 
                                   venues={venues} 
@@ -138,7 +171,10 @@ class App extends Component{
                                   neighborhoods={neighborhoods} 
                                   types={types}
                                   neighborhoodSelected={neighborhoodSelected}
-                                  typeSelected={typeSelected} /> 
+                                  typeSelected={typeSelected}
+                                  handleChange={handleChange}
+                                  handleSubmit={handleSubmit}
+                                  /> 
                                   : view === 'neighborhoods' ? 
                                   <NeighborhoodView 
                                   neighborhoods={neighborhoods} 
